@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Preguntas / Questions / Perguntas
+    url: https://github.com/dilanmpineda/macmasters/discussions
+    about: Dudas generales sobre la app o el juego.

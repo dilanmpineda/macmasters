@@ -1,0 +1,52 @@
+name: Reportar un problema / Report a bug
+description: Algo no funciona al instalar o jugar DMO con MacMasters.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportar. Thanks for reporting. Obrigado por reportar.
+        Adjunta el log: `~/Library/Logs/MacMasters/launcher.log`
+  - type: input
+    id: version
+    attributes:
+      label: Versión de MacMasters / MacMasters version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: mac
+    attributes:
+      label: Mac (modelo y chip) / Mac model and chip
+      placeholder: "MacBook Air M2"
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: Versión de macOS / macOS version
+      placeholder: "macOS 15.4"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Cómo instalaste el juego / How did you install the game
+      options:
+        - Instalar de nuevo (instalador oficial)
+        - Usar la de CrossOver
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: Qué pasó / What happened
+      description: Qué esperabas, qué viste y los pasos para reproducirlo.
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: Arrastra aquí `launcher.log` o pega las últimas líneas.
+      render: text

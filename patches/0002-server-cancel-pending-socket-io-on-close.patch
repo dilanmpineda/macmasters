@@ -1,0 +1,27 @@
+server: Cancel pending socket reads and writes when the socket is closed.
+
+When the last handle to a socket is closed, pending overlapped receives and
+sends are terminated by free_async_queue() with STATUS_HANDLES_CLOSED, so
+GetQueuedCompletionStatus() fails with ERROR_HANDLES_CLOSED (676). Windows
+completes them with STATUS_CANCELLED (ERROR_OPERATION_ABORTED, 995), as the
+closesocket documentation states and as Wine's ws2_32 tests already expect for
+pending AcceptEx and SIO_ADDRESS_LIST_CHANGE requests. Applications that stop
+their IOCP worker on 995 wait forever.
+
+Reproducer: tools/repro/iocp_close.c (err=676 before, err=995 after).
+
+--- a/server/sock.c	2026-07-15 06:37:34
++++ b/server/sock.c	2026-10-17 21:36:20
+@@ -1720,6 +1720,12 @@
+ 
+         if (sock->connect_req)
+             async_terminate( sock->connect_req->async, STATUS_CANCELLED );
++
++        /* Pending reads and writes are canceled too, so they complete with
++         * STATUS_CANCELLED (WSA_OPERATION_ABORTED) like on Windows, instead of
++         * STATUS_HANDLES_CLOSED once the fd is destroyed. */
++        async_wake_up( &sock->read_q, STATUS_CANCELLED );
++        async_wake_up( &sock->write_q, STATUS_CANCELLED );
+ 
+         LIST_FOR_EACH_ENTRY_SAFE( poll_req, poll_next, &poll_list, struct poll_req, entry )
+         {

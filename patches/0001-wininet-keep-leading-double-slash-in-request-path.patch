@@ -1,0 +1,51 @@
+wininet: Keep a leading "//" in the request path.
+
+HttpOpenRequestW canonicalizes the object name with UrlCanonicalizeW, which
+parses a path such as "//file.bin" as a network path ("//host") and appends a
+trailing "/". The request becomes "GET //file.bin/" and the server answers 404,
+while Windows sends the path unchanged.
+
+Reproducer: tools/repro/wininet_slash.c
+(InternetOpenUrlW on "https://host//file.bin": 404 before, 200 after).
+
+--- a/dlls/wininet/http.c	2026-07-15 06:37:33
++++ b/dlls/wininet/http.c	2026-10-17 21:12:05
+@@ -3506,20 +3506,32 @@
+         request->security_flags |= SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+ 
+     if (lpszObjectName && *lpszObjectName) {
++        const WCHAR *name = lpszObjectName;
++        DWORD prefix = 0;
+         HRESULT rc;
+         WCHAR dummy;
+ 
+-        len = 1;
+-        rc = UrlCanonicalizeW(lpszObjectName, &dummy, &len, URL_ESCAPE_SPACES_ONLY);
++        /* A path such as "//file.bin" is not a network path, but
++         * UrlCanonicalizeW parses it as one and appends a "/". Canonicalize
++         * from the second slash and keep the first one as is. */
++        if (name[0] == '/' && name[1] == '/')
++        {
++            name++;
++            prefix = 1;
++        }
++
++        len = 1;
++        rc = UrlCanonicalizeW(name, &dummy, &len, URL_ESCAPE_SPACES_ONLY);
+         if (rc != E_POINTER)
+-            len = lstrlenW(lpszObjectName)+1;
+-        request->path = malloc(len * sizeof(WCHAR));
+-        rc = UrlCanonicalizeW(lpszObjectName, request->path, &len,
++            len = lstrlenW(name)+1;
++        request->path = malloc((len + prefix) * sizeof(WCHAR));
++        if (prefix) request->path[0] = '/';
++        rc = UrlCanonicalizeW(name, request->path + prefix, &len,
+                    URL_ESCAPE_SPACES_ONLY);
+         if (rc != S_OK)
+         {
+             ERR("Unable to escape string!(%s) (%ld)\n",debugstr_w(lpszObjectName),rc);
+-            lstrcpyW(request->path,lpszObjectName);
++            lstrcpyW(request->path + prefix, name);
+         }
+     }else {
+         request->path = wcsdup(L"/");

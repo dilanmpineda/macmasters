@@ -1,0 +1,9 @@
+Windows Registry Editor Version 5.00
+
+; Shader compiler from the DirectX June 2010 runtime, used by the game.
+[HKEY_CURRENT_USER\Software\Wine\AppDefaults\DigimonMasters.exe\DllOverrides]
+"d3dcompiler_43"="native,builtin"
+
+; Same Windows version as the CrossOver template the game was tested on.
+[HKEY_CURRENT_USER\Software\Wine]
+"Version"="win10"

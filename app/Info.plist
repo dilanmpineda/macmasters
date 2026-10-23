@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>es</string>
+    <key>CFBundleExecutable</key>
+    <string>MacMasters</string>
+    <key>CFBundleIdentifier</key>
+    <string>io.github.macmasters</string>
+    <key>CFBundleName</key>
+    <string>MacMasters</string>
+    <key>CFBundleDisplayName</key>
+    <string>MacMasters</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.1.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>11.0</string>
+    <!-- The launcher itself has no window; the game shows its own Dock icon. -->
+    <key>LSUIElement</key>
+    <true/>
+    <key>NSHumanReadableCopyright</key>
+    <string>Proyecto no oficial, sin relación con Move Games, Gameking ni Bandai Namco. Licencia MIT; Wine bajo LGPL 2.1.</string>
+</dict>
+</plist>

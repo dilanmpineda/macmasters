@@ -1,0 +1,45 @@
+name: Funciona en mi Mac / Works on my Mac
+description: Cuéntanos en qué Mac probaste MacMasters, funcione o no.
+title: "[Compatibilidad] "
+labels: [compatibility]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Estos reportes arman la tabla de compatibilidad del README.
+        These reports build the compatibility table in the README.
+  - type: input
+    id: mac
+    attributes:
+      label: Mac (modelo y chip) / Mac model and chip
+      placeholder: "Mac mini M1, MacBook Pro Intel i7 2019…"
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: Versión de macOS / macOS version
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versión de MacMasters / MacMasters version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: result
+    attributes:
+      label: Resultado / Result
+      options:
+        - Funciona perfecto / Works perfectly
+        - Funciona con problemas / Works with issues
+        - No funciona / Doesn't work
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notas / Notes
+      description: FPS, gráficos, problemas al entrar o cerrar, etc.
